@@ -332,9 +332,9 @@
     </div>
   </div>
   <div class="btn-row">
-    <button class="btn-generate" onclick="generate()" aria-label="Générer une citation aléatoire">☭ Saisir les moyens de citation ☭</button>
-    <button class="btn-secondary" id="btn-daily" onclick="backToDaily()" aria-label="Revenir à la citation du jour">↩ Citation du jour</button>
-    <button class="btn-copy" onclick="copyQuote()" aria-label="Copier la citation">Copier pour les camarades</button>
+    <button class="btn-generate" id="btn-generate" aria-label="Générer une citation aléatoire">☭ Saisir les moyens de citation ☭</button>
+    <button class="btn-secondary" id="btn-daily" aria-label="Revenir à la citation du jour">↩ Citation du jour</button>
+    <button class="btn-copy" id="btn-copy" aria-label="Copier la citation">Copier pour les camarades</button>
     <div class="mode-label" id="mode-label"></div>
   </div>
   <div class="footer-bar">
@@ -796,6 +796,9 @@ function showToast(msg) {
 }
 
 showDaily();
+document.getElementById('btn-generate').addEventListener('click', generate);
+document.getElementById('btn-daily').addEventListener('click', backToDaily);
+document.getElementById('btn-copy').addEventListener('click', copyQuote);
 </script>
 </body>
 </html>
