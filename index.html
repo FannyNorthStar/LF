@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Lutte Finale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C41E1E;
+    --red-dark: #8B0000;
+    --gold: #D4A017;
+    --gold-light: #F2D06B;
+    --cream: #F5E6C8;
+    --black: #1A1008;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  :root {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body {
+    min-height: 100vh;
+    background: var(--red);
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0,0,0,0.04) 40px, rgba(0,0,0,0.04) 42px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .poster {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    width: 100%;
+    background: var(--red-dark);
+    border: 6px solid var(--gold);
+    outline: 3px solid var(--red-dark);
+    outline-offset: 6px;
+    text-align: center;
+  }
+  .header-bar {
+    background: var(--gold);
+    padding: 14px 20px 10px;
+    position: relative;
+  }
+  .header-bar::after {
+    content: '';
+    position: absolute;
+    bottom: -12px; left: 0; right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0px, var(--gold) 8px, transparent 8px, transparent 16px);
+  }
+  .site-title {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    color: var(--red-dark);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .subtitle {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    color: var(--red-dark);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .star-container { padding: 28px 0 8px; }
+  .star-container svg {
+    width: 64px; height: 64px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+  .quote-area { padding: 12px 32px 20px; }
+  .quote-marks {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    opacity: 0.6;
+    margin-bottom: -12px;
+  }
+  .quote-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.05rem, 3vw, 1.35rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--cream);
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 8px;
+    min-height: 80px;
+    transition: opacity 0.3s;
+  }
+  .author-block {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 2px solid var(--gold);
+    display: inline-block;
+  }
+  .author-name {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .author-source {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 0.85rem;
+    color: var(--cream);
+    opacity: 0.55;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .btn-row { padding: 8px 32px 24px; }
+  .btn-generate {
+    background: var(--gold);
+    border: none;
+    color: var(--red-dark);
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    letter-spacing: 0.12em;
+    padding: 14px 32px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 0 #8B6508;
+    position: relative;
+  }
+  .btn-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #8B6508;
+  }
+  .btn-generate:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #8B6508;
+  }
+  .mode-label {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--cream);
+    opacity: 0.45;
+    margin-top: 10px;
+  }
+  .footer-bar {
+    background: var(--gold);
+    padding: 10px 20px;
+    position: relative;
+  }
+  .footer-bar::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: 0; right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(90deg, var(--gold) 0px, var(--gold) 8px, transparent 8px, transparent 16px);
+  }
+  .footer-text {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 0.85rem;
+    color: var(--red-dark);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+  .day-counter {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 0.75rem;
+    color: var(--red-dark);
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+    margin-top: 2px;
+  }
+  .corner {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.5;
+  }
+  .corner.tl { top: 12px; left: 12px; border-width: 3px 0 0 3px; }
+  .corner.tr { top: 12px; right: 12px; border-width: 3px 3px 0 0; }
+  .corner.bl { bottom: 12px; left: 12px; border-width: 0 0 3px 3px; }
+  .corner.br { bottom: 12px; right: 12px; border-width: 0 3px 3px 0; }
+  .fade-out { opacity: 0; }
+  @media (max-width: 480px) {
+    .quote-area { padding: 12px 20px 16px; }
+    .btn-row { padding: 8px 20px 20px; }
+    body { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <div class="header-bar">
+    <div class="site-title">La Lutte Finale</div>
+    <div class="subtitle">Organe Quotidien de la Conscience Familiale</div>
+  </div>
+  <div class="star-container">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 61,35 95,35 68,55 78,90 50,68 22,90 32,55 5,35 39,35" fill="#D4A017" stroke="#8B0000" stroke-width="1.5"/>
+      <circle cx="50" cy="50" r="12" fill="#8B0000" stroke="#D4A017" stroke-width="1"/>
+      <text x="50" y="55" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="14" fill="#D4A017" letter-spacing="1">☭</text>
+    </svg>
+  </div>
+  <div class="quote-area">
+    <div class="quote-marks">«</div>
+    <p class="quote-text" id="quote"></p>
+    <div class="author-block">
+      <div class="author-name" id="author"></div>
+      <div class="author-source" id="source"></div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-generate" onclick="generate()">☭ Saisir les moyens de citation ☭</button>
+    <div class="mode-label" id="mode-label"></div>
+  </div>
+  <div class="footer-bar">
+    <div class="footer-text">Prolétaires de tous les salons, unissez-vous !</div>
+    <div class="day-counter" id="day-counter"></div>
+  </div>
+</div>
+<script>
+const Q = [
+// ═══════ KARL MARX ═══════
+{t:"Les philosophes n'ont fait qu'interpréter le monde de différentes manières, ce qui importe c'est de le transformer.",a:"Karl Marx",s:"Thèses sur Feuerbach, 1845"},
+{t:"L'histoire de toute société jusqu'à nos jours n'a été que l'histoire de luttes de classes.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"La religion est le soupir de la créature opprimée, l'âme d'un monde sans cœur. Elle est l'opium du peuple.",a:"Karl Marx",s:"Critique de la philosophie du droit de Hegel, 1844"},
+{t:"Le capital est du travail mort, qui, semblable au vampire, ne s'anime qu'en suçant le travail vivant.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"De chacun selon ses capacités, à chacun selon ses besoins.",a:"Karl Marx",s:"Critique du programme de Gotha, 1875"},
+{t:"Ce n'est pas la conscience des hommes qui détermine leur existence, c'est au contraire leur existence sociale qui détermine leur conscience.",a:"Karl Marx",s:"Contribution à la critique de l'économie politique, 1859"},
+{t:"Tout ce qui est solide se volatilise, tout ce qui est sacré est profané.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"L'émancipation des travailleurs sera l'œuvre des travailleurs eux-mêmes.",a:"Karl Marx",s:"Statuts de l'Association Internationale des Travailleurs, 1864"},
+{t:"L'histoire se répète, la première fois comme tragédie, la seconde fois comme farce.",a:"Karl Marx",s:"Le 18 Brumaire de Louis Bonaparte, 1852"},
+{t:"Les idées dominantes d'une époque n'ont jamais été que les idées de la classe dominante.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"Prolétaires de tous les pays, unissez-vous !",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"L'homme fait sa propre histoire, mais il ne la fait pas de plein gré, dans des circonstances qu'il a lui-même choisies.",a:"Karl Marx",s:"Le 18 Brumaire de Louis Bonaparte, 1852"},
+{t:"La tradition de toutes les générations mortes pèse d'un poids très lourd sur le cerveau des vivants.",a:"Karl Marx",s:"Le 18 Brumaire de Louis Bonaparte, 1852"},
+{t:"Un spectre hante l'Europe — le spectre du communisme.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"Être radical, c'est prendre les choses par la racine. Or la racine de l'homme, c'est l'homme lui-même.",a:"Karl Marx",s:"Critique de la philosophie du droit de Hegel, 1844"},
+{t:"La dépréciation du monde des hommes augmente en raison directe de la mise en valeur du monde des choses.",a:"Karl Marx",s:"Manuscrits de 1844"},
+{t:"Le mode de production de la vie matérielle conditionne le processus de vie social, politique et intellectuel en général.",a:"Karl Marx",s:"Contribution à la critique de l'économie politique, 1859"},
+{t:"Accumulation de richesse à un pôle signifie accumulation de misère à l'autre pôle.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"Le mort saisit le vif.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"La bourgeoisie a joué dans l'histoire un rôle éminemment révolutionnaire.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"Le travailleur devient d'autant plus pauvre qu'il produit plus de richesse.",a:"Karl Marx",s:"Manuscrits de 1844"},
+{t:"La raison a toujours existé, mais pas toujours sous une forme raisonnable.",a:"Karl Marx",s:"Lettre à Arnold Ruge, 1843"},
+{t:"Le temps est l'espace du développement humain.",a:"Karl Marx",s:"Discours sur le libre-échange, 1848"},
+{t:"Le travail aliéné fait de l'être générique de l'homme un être étranger à lui-même.",a:"Karl Marx",s:"Manuscrits de 1844"},
+{t:"La bourgeoisie ne peut exister sans révolutionner constamment les instruments de production.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"Dans la société bourgeoise, le capital est indépendant et personnel, tandis que l'individu qui travaille n'a ni indépendance ni personnalité.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"Le libre développement de chacun est la condition du libre développement de tous.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"La société bourgeoise moderne n'a pas aboli les antagonismes de classes. Elle n'a fait que substituer de nouvelles classes à celles d'autrefois.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+
+// ═══════ FRIEDRICH ENGELS ═══════
+{t:"L'État n'est rien d'autre qu'un instrument d'oppression d'une classe par une autre.",a:"Friedrich Engels",s:"L'Origine de la famille, de la propriété privée et de l'État, 1884"},
+{t:"La condition de l'émancipation de la classe ouvrière est l'abolition de toute classe.",a:"Friedrich Engels",s:"Principes du communisme, 1847"},
+{t:"L'histoire n'est rien que l'activité de l'homme poursuivant ses propres fins.",a:"Friedrich Engels",s:"La Sainte Famille, 1845"},
+{t:"La nature est le banc d'épreuve de la dialectique.",a:"Friedrich Engels",s:"Dialectique de la nature, 1883"},
+{t:"Un gramme de pratique vaut plus qu'une tonne de théorie.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"Le gouvernement des personnes fait place à l'administration des choses.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"La liberté est la compréhension de la nécessité.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"Les hommes font leur propre histoire, mais dans un milieu donné qui les conditionne.",a:"Friedrich Engels",s:"Lettre à Joseph Bloch, 1890"},
+{t:"La situation de la classe ouvrière est la base réelle de la société actuelle.",a:"Friedrich Engels",s:"La Situation de la classe laborieuse en Angleterre, 1845"},
+{t:"Chaque pas en avant est une victoire de la science et un coup porté à la croyance en l'autorité.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"La violence n'est que le moyen, le but est l'avantage économique.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"L'État n'existe pas de toute éternité. Il y a eu des sociétés qui se sont passées de lui.",a:"Friedrich Engels",s:"L'Origine de la famille, 1884"},
+{t:"La famille monogame est la première forme de famille fondée sur des conditions économiques.",a:"Friedrich Engels",s:"L'Origine de la famille, 1884"},
+{t:"Le facteur déterminant en dernier ressort dans l'histoire, c'est la production et la reproduction de la vie immédiate.",a:"Friedrich Engels",s:"L'Origine de la famille, 1884"},
+{t:"L'émancipation de la femme a pour condition première la rentrée de tout le sexe féminin dans l'industrie publique.",a:"Friedrich Engels",s:"L'Origine de la famille, 1884"},
+{t:"La quantité se transforme en qualité.",a:"Friedrich Engels",s:"Dialectique de la nature, 1883"},
+{t:"Sans la grande industrie anglaise, il n'y aurait pas eu de socialisme moderne.",a:"Friedrich Engels",s:"La Situation de la classe laborieuse en Angleterre, 1845"},
+
+// ═══════ LÉON TROTSKI ═══════
+{t:"La vie est belle. Que les générations futures la nettoient de tout mal, de toute oppression, de toute violence, et en jouissent pleinement.",a:"Léon Trotski",s:"Testament, 1940"},
+{t:"La bureaucratie soviétique a exproprié politiquement le prolétariat.",a:"Léon Trotski",s:"La Révolution trahie, 1936"},
+{t:"Celui qui veut la fin ne peut pas répudier les moyens.",a:"Léon Trotski",s:"Leur morale et la nôtre, 1938"},
+{t:"La révolution permanente signifie que la révolution ne s'arrête à aucune étape.",a:"Léon Trotski",s:"La Révolution permanente, 1930"},
+{t:"Staline n'est que la plus remarquable médiocrité de la bureaucratie soviétique.",a:"Léon Trotski",s:"Ma vie, 1930"},
+{t:"L'art n'est pas un miroir que l'on promène le long d'un chemin, c'est un marteau avec lequel on le façonne.",a:"Léon Trotski",s:"Littérature et Révolution, 1924"},
+{t:"Sans théorie révolutionnaire, pas de mouvement révolutionnaire.",a:"Léon Trotski",s:"Bilan et perspectives, 1906"},
+{t:"La révolution est la locomotive de l'histoire.",a:"Léon Trotski",s:"Résultats et perspectives, 1906"},
+{t:"Il n'y a pas de plus grand plaisir au monde que de se mêler d'une révolution.",a:"Léon Trotski",s:"Ma vie, 1930"},
+{t:"Le privilège de la médiocrité historique est de mourir dans son lit.",a:"Léon Trotski",s:"Ma vie, 1930"},
+{t:"Le stalinisme est avant tout le produit automatique du vieux bolchevisme mais sa négation dialectique.",a:"Léon Trotski",s:"La Révolution trahie, 1936"},
+{t:"La puissance de la pensée consiste en ce qu'elle est capable de dépasser les limites de son époque.",a:"Léon Trotski",s:"Histoire de la révolution russe, 1930"},
+{t:"Le socialisme a besoin de la démocratie comme le corps humain a besoin d'oxygène.",a:"Léon Trotski",s:"Terrorisme et communisme, 1920"},
+{t:"Les vieux ne veulent pas mourir et les jeunes ne peuvent pas encore vivre.",a:"Léon Trotski",s:"Histoire de la révolution russe, 1930"},
+{t:"Celui qui se prosterne devant le fait accompli est incapable de préparer l'avenir.",a:"Léon Trotski",s:"Ma vie, 1930"},
+{t:"On ne peut pas bâtir le socialisme sur la misère.",a:"Léon Trotski",s:"La Révolution trahie, 1936"},
+{t:"Le trait fondamental de toute révolution est l'intervention directe des masses dans les événements historiques.",a:"Léon Trotski",s:"Histoire de la révolution russe, 1930"},
+{t:"Toute la vie politique n'est qu'une chaîne ininterrompue de maillons faibles. Toute l'art de la politique consiste à trouver le maillon le plus facile à saisir.",a:"Léon Trotski",s:"Où va la France ?, 1936"},
+{t:"La dialectique n'est pas une fiction ni une mystique, mais une science des formes de notre pensée.",a:"Léon Trotski",s:"ABC de la dialectique matérialiste, 1939"},
+{t:"La confiance dans la force des idées signifie en même temps la méfiance à l'égard des baïonnettes.",a:"Léon Trotski",s:"Leur morale et la nôtre, 1938"},
+{t:"Le vieux monde pourrit. Le nouveau monde tarde à apparaître. Et dans ce clair-obscur surgissent les monstres.",a:"Léon Trotski",s:"Repris d'après Gramsci, attribué"},
+{t:"Chaque bureaucrate sait que le chaos est le meilleur moment pour se servir.",a:"Léon Trotski",s:"La Révolution trahie, 1936"},
+
+// ═══════ JEAN-LUC MÉLENCHON ═══════
+{t:"La République, c'est moi !",a:"Jean-Luc Mélenchon",s:"Perquisition au siège de LFI, 2018"},
+{t:"Qu'ils s'en aillent tous ! Vite, la révolution citoyenne.",a:"Jean-Luc Mélenchon",s:"Titre de son livre, 2010"},
+{t:"Prenez le pouvoir !",a:"Jean-Luc Mélenchon",s:"Slogan de campagne présidentielle, 2012"},
+{t:"Je ne suis pas un homme dangereux. Mais je suis l'homme d'un programme dangereux pour les privilégiés.",a:"Jean-Luc Mélenchon",s:"Meeting de Marseille, 2012"},
+{t:"L'avenir en commun !",a:"Jean-Luc Mélenchon",s:"Programme de campagne, 2017"},
+{t:"La Sixième République, c'est le peuple qui décide de tout.",a:"Jean-Luc Mélenchon",s:"Convention pour la 6e République, 2014"},
+{t:"Ma patrie, c'est la langue française.",a:"Jean-Luc Mélenchon",s:"L'Ère du peuple, 2014"},
+{t:"La mer monte ! Et avec elle le peuple !",a:"Jean-Luc Mélenchon",s:"Meeting de Marseille, 2017"},
+{t:"Je ne me résigne à rien. Jamais.",a:"Jean-Luc Mélenchon",s:"Discours du soir du premier tour, 2017"},
+{t:"Le peuple est souverain en démocratie, pas les marchés.",a:"Jean-Luc Mélenchon",s:"Discours à l'Assemblée nationale, 2017"},
+{t:"La France, c'est un programme politique universel. C'est les droits de l'homme.",a:"Jean-Luc Mélenchon",s:"Meeting de Toulouse, 2017"},
+{t:"On ne négocie pas avec la Terre. On ne négocie pas avec la physique.",a:"Jean-Luc Mélenchon",s:"Discours sur le climat, 2019"},
+{t:"Le drapeau tricolore et le drapeau rouge, c'est la même histoire.",a:"Jean-Luc Mélenchon",s:"Meeting Place de la République, 2016"},
+{t:"La force du peuple est plus grande que les gens au pouvoir.",a:"Jean-Luc Mélenchon",s:"Meeting de Lille, 2017"},
+{t:"Je ne suis le domestique d'aucune puissance étrangère.",a:"Jean-Luc Mélenchon",s:"Discours de campagne, 2017"},
+{t:"Le bruit et la fureur ne sont pas un programme.",a:"Jean-Luc Mélenchon",s:"Discours à l'Assemblée nationale, 2018"},
+{t:"Le peuple français est un peuple de révolutionnaires.",a:"Jean-Luc Mélenchon",s:"Discours de la Place de la République, 2016"},
+{t:"Quand tout le monde triche, ce n'est pas de la triche, c'est le système.",a:"Jean-Luc Mélenchon",s:"Blog personnel, 2016"},
+{t:"La créolisation du monde est notre avenir.",a:"Jean-Luc Mélenchon",s:"L'Ère du peuple, 2014"},
+{t:"L'union populaire, c'est le contraire du chef qui a toujours raison.",a:"Jean-Luc Mélenchon",s:"Meeting de campagne, 2022"},
+{t:"Le capitalisme financier ne connaît ni patrie ni loi, sinon celle du profit.",a:"Jean-Luc Mélenchon",s:"Discours au Parlement européen, 2010"},
+{t:"La République est sociale ou elle n'est pas.",a:"Jean-Luc Mélenchon",s:"Discours de campagne, 2012"},
+{t:"L'écologie populaire, c'est quand tout le monde mange bien, pas seulement ceux qui ont les moyens.",a:"Jean-Luc Mélenchon",s:"Meeting de Rennes, 2022"},
+{t:"Je ne suis candidat à rien d'autre qu'à l'intérêt général humain.",a:"Jean-Luc Mélenchon",s:"Discours de campagne, 2022"},
+{t:"Nous ne sommes pas une parenthèse de l'histoire. Nous sommes l'histoire.",a:"Jean-Luc Mélenchon",s:"Meeting du 18 mars, Place de la République, 2017"},
+
+// ═══════ PIERRE-JOSEPH PROUDHON ═══════
+{t:"La propriété, c'est le vol !",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"L'anarchie, c'est l'ordre sans le pouvoir.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"Être gouverné, c'est être gardé à vue, inspecté, espionné, dirigé, légiféré, réglementé, parqué.",a:"Pierre-Joseph Proudhon",s:"Idée générale de la Révolution au XIXe siècle, 1851"},
+{t:"La liberté est la mère de l'ordre, non sa fille.",a:"Pierre-Joseph Proudhon",s:"Solution du problème social, 1848"},
+{t:"Le gouvernement de l'homme par l'homme, sous quelque nom qu'il se déguise, est oppression.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"L'humanité procède par approximation.",a:"Pierre-Joseph Proudhon",s:"Philosophie de la misère, 1846"},
+{t:"Quiconque met la main sur moi pour me gouverner est un usurpateur et un tyran.",a:"Pierre-Joseph Proudhon",s:"Confessions d'un révolutionnaire, 1849"},
+{t:"Le propriétaire qui ne cultive pas sa terre est un voleur.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"La justice est le respect spontanément éprouvé et réciproquement garanti de la dignité humaine.",a:"Pierre-Joseph Proudhon",s:"De la justice dans la Révolution et dans l'Église, 1858"},
+{t:"Multiplier les lois, c'est multiplier les occasions de les violer.",a:"Pierre-Joseph Proudhon",s:"Idée générale de la Révolution, 1851"},
+{t:"La société trouve son plus haut perfectionnement dans l'union de l'ordre et de l'anarchie.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"L'association libre est la vraie forme de la société.",a:"Pierre-Joseph Proudhon",s:"Idée générale de la Révolution, 1851"},
+{t:"Prouver le droit, c'est prouver la justice.",a:"Pierre-Joseph Proudhon",s:"De la justice dans la Révolution et dans l'Église, 1858"},
+{t:"Le travail est la source de toute valeur.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"L'ordre naît de l'association libre, non de la contrainte.",a:"Pierre-Joseph Proudhon",s:"Du principe fédératif, 1863"},
+{t:"Plus de gouvernements, plus de conquêtes, plus de douanes, plus d'exploitation internationale.",a:"Pierre-Joseph Proudhon",s:"Du principe fédératif, 1863"},
+{t:"La démocratie, c'est la démopédie : l'éducation du peuple par le peuple.",a:"Pierre-Joseph Proudhon",s:"De la justice, 1858"},
+{t:"La propriété est impossible sans un système de contrainte.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"Le peuple n'a jamais eu qu'un seul ennemi, le gouvernement.",a:"Pierre-Joseph Proudhon",s:"Confessions d'un révolutionnaire, 1849"},
+
+// ═══════ LOUISE MICHEL ═══════
+{t:"Je suis ambitieuse pour l'humanité. Moi, je voudrais que tout le monde fût artiste, assez poète pour que la vanité humaine disparût.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"C'est que le pouvoir est maudit et c'est pour cela que je suis anarchiste.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Si les cœurs des femmes faiblissaient, il ne resterait plus qu'à tuer la liberté.",a:"Louise Michel",s:"Discours au procès de 1883"},
+{t:"Nous ne voulons pas la guerre mais nous ne la craignons pas.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Le rêve de la Commune est le rêve de l'humanité entière.",a:"Louise Michel",s:"La Commune, histoire et souvenirs, 1898"},
+{t:"Il y a des heures dans l'humanité qui portent en elles la vie ou la mort des peuples.",a:"Louise Michel",s:"La Commune, 1898"},
+{t:"Tout pouvoir porte en lui un germe de mort.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"La Révolution sera la floraison de l'humanité comme l'amour est la floraison du cœur.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Qu'on me donne la mort ou qu'on me donne la liberté ; entre les deux, je ne veux rien.",a:"Louise Michel",s:"Procès devant le Conseil de guerre, 1871"},
+{t:"Si vous n'êtes pas des lâches, tuez-moi !",a:"Louise Michel",s:"Procès de 1871"},
+{t:"Chacun cherche sa route ; nous cherchons la nôtre et nous pensons que le jour où le règne de la liberté sera arrivé, le genre humain sera heureux.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Les révolutions sont la preuve que le peuple ne se résigne pas.",a:"Louise Michel",s:"La Commune, 1898"},
+{t:"On appelle folles les femmes qui ont du caractère.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"L'anarchie est la plus haute expression de l'ordre.",a:"Louise Michel",s:"Discours, 1882"},
+{t:"Je suis avec ceux qui souffrent, quels qu'ils soient.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Chaque être a le droit au pain comme à la vie.",a:"Louise Michel",s:"Prise de possession, 1890"},
+{t:"L'éducation est la clef de l'avenir.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Il faut que les femmes soient les égales des hommes, et elles le seront.",a:"Louise Michel",s:"Discours au procès de 1883"},
+{t:"La banqueroute est le mot d'ordre de la politique humaine.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Il viendra un temps où tout ce que l'humanité a souffert ne sera plus qu'un souvenir lointain.",a:"Louise Michel",s:"La Commune, 1898"},
+
+// ═══════ MIKHAÏL BAKOUNINE ═══════
+{t:"La liberté des autres étend la mienne à l'infini.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Si Dieu existait réellement, il faudrait le faire disparaître.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Toute autorité temporaire devient vite tyrannique.",a:"Mikhaïl Bakounine",s:"Étatisme et Anarchie, 1873"},
+{t:"La passion de la destruction est en même temps une passion créatrice.",a:"Mikhaïl Bakounine",s:"La Réaction en Allemagne, 1842"},
+{t:"Là où commence l'État, la liberté individuelle cesse, et inversement.",a:"Mikhaïl Bakounine",s:"Fédéralisme, socialisme et antithéologisme, 1867"},
+{t:"Les doctrinaires, les professeurs et tous les faiseurs de systèmes veulent le despotisme de la science.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Je ne suis véritablement libre que lorsque tous les êtres humains qui m'entourent sont également libres.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Nous sommes des matérialistes convaincus et des ennemis déclarés de toute idéologie.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Le peuple se révoltera spontanément, par la seule force des choses.",a:"Mikhaïl Bakounine",s:"Lettres à un Français, 1870"},
+{t:"Prenez le plus radical des révolutionnaires, placez-le sur le trône de toutes les Russies, et il deviendra pire que le tsar lui-même.",a:"Mikhaïl Bakounine",s:"Correspondance, 1870"},
+{t:"L'État est la force organisée de la classe possédante.",a:"Mikhaïl Bakounine",s:"Étatisme et Anarchie, 1873"},
+{t:"La révolution sociale doit être l'œuvre collective des masses.",a:"Mikhaïl Bakounine",s:"Lettres à un Français, 1870"},
+{t:"L'instruction intégrale est le seul moyen de réaliser l'égalité.",a:"Mikhaïl Bakounine",s:"L'instruction intégrale, 1869"},
+{t:"L'homme n'est vraiment libre qu'au milieu d'hommes libres.",a:"Mikhaïl Bakounine",s:"Fédéralisme, socialisme et antithéologisme, 1867"},
+{t:"Tout État est une tyrannie, qu'il soit monarchique ou républicain.",a:"Mikhaïl Bakounine",s:"Étatisme et Anarchie, 1873"},
+{t:"Trois choses constituent les éléments essentiels de toute vie humaine : la pensée, le travail et la révolte.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"La théologie est la science du mensonge divin.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"La première révolte de l'homme est contre l'injustice suprême de la nature.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"La science ne doit imposer rien. Elle doit expliquer.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+
+// ═══════ ANTONIO GRAMSCI ═══════
+{t:"Le vieux monde se meurt, le nouveau monde tarde à apparaître et dans ce clair-obscur surgissent les monstres.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Je suis pessimiste par l'intelligence, mais optimiste par la volonté.",a:"Antonio Gramsci",s:"Lettres de prison, 1929"},
+{t:"L'indifférence est le poids mort de l'histoire.",a:"Antonio Gramsci",s:"La Città futura, 1917"},
+{t:"La crise consiste justement dans le fait que l'ancien meurt et que le nouveau ne peut pas naître.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Tout homme est intellectuel, mais tout homme n'a pas dans la société la fonction d'intellectuel.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"L'hégémonie naît dans l'usine.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Instruisez-vous, car nous aurons besoin de toute notre intelligence.",a:"Antonio Gramsci",s:"L'Ordine Nuovo, 1919"},
+{t:"Agitez-vous, car nous aurons besoin de tout votre enthousiasme.",a:"Antonio Gramsci",s:"L'Ordine Nuovo, 1919"},
+{t:"Organisez-vous, car nous aurons besoin de toute votre force.",a:"Antonio Gramsci",s:"L'Ordine Nuovo, 1919"},
+{t:"Je hais les indifférents.",a:"Antonio Gramsci",s:"La Città futura, 1917"},
+{t:"L'histoire enseigne, mais elle n'a pas d'élèves.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"L'État est tout l'ensemble des activités pratiques et théoriques grâce auxquelles la classe dirigeante justifie et maintient sa domination.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Vivre signifie être partisan. L'indifférence est apathie, est parasitisme.",a:"Antonio Gramsci",s:"La Città futura, 1917"},
+{t:"La vérité est révolutionnaire.",a:"Antonio Gramsci",s:"L'Ordine Nuovo, 1919"},
+{t:"Le sens commun est le folklore de la philosophie.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Il faut avoir une conception critique de soi-même, obtenue à travers une élaboration historique.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"On ne peut pas séparer l'homo faber de l'homo sapiens.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Chaque rapport d'hégémonie est nécessairement un rapport pédagogique.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"La conquête du pouvoir culturel précède la conquête du pouvoir politique.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+
+// ═══════ ANGELA DAVIS ═══════
+{t:"Je ne suis plus disposée à accepter les choses que je ne peux pas changer. Je change les choses que je ne peux pas accepter.",a:"Angela Davis",s:"Autobiographie, 1974"},
+{t:"Les murs de la prison transforment en révolutionnaire quiconque est enfermé entre eux.",a:"Angela Davis",s:"Si ils frappent à l'aube, 1971"},
+{t:"La liberté est une lutte constante.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"Il ne suffit pas de ne pas être raciste, il faut être antiraciste.",a:"Angela Davis",s:"Femmes, race et classe, 1981"},
+{t:"Dans une société raciste, il ne suffit pas de ne pas être raciste, il faut être antiraciste.",a:"Angela Davis",s:"Conférence, 2018"},
+{t:"Quand on est convaincu d'avoir raison, on n'a pas peur d'aller en prison.",a:"Angela Davis",s:"Autobiographie, 1974"},
+{t:"Les prisons ne font pas disparaître les problèmes, elles font disparaître les êtres humains.",a:"Angela Davis",s:"Les Goulags de la démocratie, 2003"},
+{t:"Le féminisme est un mouvement pour mettre fin au sexisme, à l'exploitation sexiste et à l'oppression.",a:"Angela Davis",s:"Femmes, race et classe, 1981"},
+{t:"Radical signifie simplement prendre les choses par la racine.",a:"Angela Davis",s:"Discours, 1971"},
+{t:"La nourriture que vous mangez est politique.",a:"Angela Davis",s:"Conférence au Grace Cathedral, 2014"},
+{t:"Le racisme ne peut être séparé du capitalisme.",a:"Angela Davis",s:"Femmes, race et classe, 1981"},
+{t:"On ne peut pas lutter pour la liberté de certains en ignorant l'oppression des autres.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"Les révolutions ne sont jamais pacifiques, mais elles sont nécessaires.",a:"Angela Davis",s:"Autobiographie, 1974"},
+{t:"Nous devons toujours tenter de faire ce qui semble impossible.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"La solidarité est le premier pas vers la justice.",a:"Angela Davis",s:"Conférence, 2019"},
+{t:"L'histoire des luttes est notre plus grande source d'espoir.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"Nous devons imaginer le type de société dans laquelle nous voulons vivre.",a:"Angela Davis",s:"Les Goulags de la démocratie, 2003"},
+
+// ═══════ FRANTZ FANON ═══════
+{t:"Chaque génération doit, dans une relative opacité, découvrir sa mission, la remplir ou la trahir.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"L'homme colonisé qui écrit pour son peuple doit utiliser le passé dans l'intention d'ouvrir l'avenir.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Ô mon corps, fais de moi toujours un homme qui interroge !",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+{t:"Le colonialisme n'est pas une machine à penser, ce n'est pas un corps doué de raison. Il est la violence à l'état de nature.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Le Noir n'est pas un homme. Il y a une zone de non-être, une région extraordinairement stérile.",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+{t:"Quand on entend parler en mal des Juifs, on dresse l'oreille. C'est de moi qu'on parle.",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+{t:"La décolonisation est toujours un phénomène violent.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"L'Europe est littéralement la création du tiers-monde.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Parler une langue, c'est assumer un monde, une civilisation.",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+{t:"Ce n'est pas la terre qui appartient à l'homme, c'est l'homme qui appartient à la terre.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Pour le colonisé, la vie ne peut surgir que du cadavre en décomposition du colon.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Il ne suffit pas de sortir de chez soi. Il faut sortir de son époque.",a:"Frantz Fanon",s:"Sociologie d'une révolution, 1959"},
+{t:"Nous ne voulons rattraper personne. Nous voulons marcher tout le temps, de nuit et de jour.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Le racisme colonial ne diffère pas des autres racismes.",a:"Frantz Fanon",s:"Pour la révolution africaine, 1964"},
+{t:"Je suis un homme, et c'est tout le passé du monde que j'ai à reprendre.",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+{t:"L'impérialisme quitte un pays mais laisse ses germes de pourriture.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Travailler, c'est travailler à la mort du colon.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"La culture nationale est l'ensemble des efforts faits par un peuple sur le plan de la pensée.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Il n'y a pas d'occupation blanche de la terre qui ne soit en même temps mort de la société indigène.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"L'homme qui adore un Nègre est aussi malade que celui qui l'exècre.",a:"Frantz Fanon",s:"Peau noire, masques blancs, 1952"},
+
+// ═══════ SALVADOR ALLENDE ═══════
+{t:"Être jeune et ne pas être révolutionnaire est une contradiction presque biologique.",a:"Salvador Allende",s:"Discours à l'Université de Guadalajara, 1972"},
+{t:"L'histoire est à nous, et ce sont les peuples qui la font.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Les grandes avenues par lesquelles passera l'homme libre pour construire une société meilleure s'ouvriront.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Je ne démissionnerai pas. Placé dans une transition historique, je paierai de ma vie la loyauté du peuple.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Le socialisme ne se décrète pas. Il se construit.",a:"Salvador Allende",s:"Discours au Congrès, 1971"},
+{t:"Le cuivre est le salaire du Chili.",a:"Salvador Allende",s:"Discours sur la nationalisation du cuivre, 1971"},
+{t:"Le peuple chilien a conquis le pouvoir politique sans être obligé de recourir aux armes.",a:"Salvador Allende",s:"Discours devant les Nations Unies, 1972"},
+{t:"Notre voie vers le socialisme respectera les libertés démocratiques.",a:"Salvador Allende",s:"Premier message au Congrès, 1971"},
+{t:"Le peuple doit se défendre, mais pas se sacrifier.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Nous sommes contre la violence. Nous ne sommes pas hommes de violence.",a:"Salvador Allende",s:"Discours de campagne, 1970"},
+{t:"Plus tôt que tard s'ouvriront les grandes avenues.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Travailleurs de ma patrie : j'ai foi dans le Chili et dans son destin.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+{t:"Notre révolution n'est pas une révolution d'exportation. C'est la révolution chilienne.",a:"Salvador Allende",s:"Discours devant les Nations Unies, 1972"},
+{t:"La révolution ne passe pas par l'université, mais l'université peut servir la révolution.",a:"Salvador Allende",s:"Discours à l'Université de Guadalajara, 1972"},
+{t:"Ce n'est pas le moment de la résignation. C'est le moment de la dignité.",a:"Salvador Allende",s:"Dernier discours, 11 septembre 1973"},
+
+// ═══════ IVAN ILLICH ═══════
+{t:"L'école est l'agence de publicité qui vous fait croire que vous avez besoin de la société telle qu'elle est.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"L'institution médicale est devenue une menace majeure pour la santé.",a:"Ivan Illich",s:"Némésis médicale, 1975"},
+{t:"La plupart des choses que l'on apprend, on les apprend en dehors de l'école.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"L'homme n'a pas besoin d'outils qui travaillent à sa place. Il a besoin d'outils avec lesquels il puisse travailler.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Passé un certain seuil, l'outil de la servitude à la convivialité.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"L'automobile prend plus de temps qu'elle n'en économise.",a:"Ivan Illich",s:"Énergie et équité, 1973"},
+{t:"L'éducation universelle est l'objectif le plus réalisable et le plus irréalisable de notre temps.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"Les pauvres ont toujours été socialement impuissants. Le développement économique les rend en plus dépendants.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Le rythme de la vie industrielle détruit la possibilité de vivre simplement.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"La surmédicalisation de la société est aussi dangereuse que la sous-médicalisation.",a:"Ivan Illich",s:"Némésis médicale, 1975"},
+{t:"La convivialité est la liberté individuelle réalisée dans la relation de production.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Nous devons redécouvrir le sens de la limite.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Le diplôme est devenu la monnaie de l'éducation.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"L'homme moderne est prisonnier de ses outils.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Le vrai luxe, c'est le temps libre et l'autonomie.",a:"Ivan Illich",s:"Le Chômage créateur, 1977"},
+{t:"La croissance illimitée ne produit pas la liberté. Elle produit la dépendance.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+{t:"Le système scolaire est le plus grand employeur du monde. Et le plus grand embrigadement.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"Au-delà d'un certain seuil, la médecine engendre la maladie.",a:"Ivan Illich",s:"Némésis médicale, 1975"},
+{t:"La vitesse généralisée d'une société ne dépasse jamais vingt-cinq kilomètres à l'heure.",a:"Ivan Illich",s:"Énergie et équité, 1973"},
+{t:"L'ami est quelqu'un qui choisit de partager sa table, non quelqu'un qui y est obligé.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+
+// ═══════ AIMÉ CÉSAIRE ═══════
+{t:"Ma bouche sera la bouche des malheurs qui n'ont point de bouche, ma voix, la liberté de celles qui s'affaissent au cachot du désespoir.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+{t:"Une civilisation qui s'avère incapable de résoudre les problèmes que suscite son fonctionnement est une civilisation décadente.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"La colonisation travaille à déciviliser le colonisateur.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Entre colonisateur et colonisé, il n'y a de place que pour la corvée, l'intimidation, la pression, la police.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Nul n'est en droit de s'identifier à l'universel s'il n'a pas résolu ses propres contradictions.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Il est des peuples sans passé. Des peuples sans archives. Des peuples sans mémoire. C'est un mensonge.",a:"Aimé Césaire",s:"Discours prononcé à Dakar, 1966"},
+{t:"Attention à prendre le légitime orgueil de notre négritude.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+{t:"L'Europe est indéfendable.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"La négritude n'est ni une tour ni une cathédrale. Elle plonge dans la chair rouge du sol.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+{t:"On ne bâtit pas l'avenir avec des regrets.",a:"Aimé Césaire",s:"Lettre à Maurice Thorez, 1956"},
+{t:"La justice d'abord. Le reste en découle.",a:"Aimé Césaire",s:"Discours, 1981"},
+{t:"Le colonialisme est la chose du monde la mieux partagée.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Il y a deux manières de se perdre : par ségrégation murée dans le particulier ou par dilution dans l'universel.",a:"Aimé Césaire",s:"Lettre à Maurice Thorez, 1956"},
+{t:"Le poète est cet être très vieux et très neuf, très complexe et très simple.",a:"Aimé Césaire",s:"Poésie et connaissance, 1945"},
+{t:"Le progrès n'est pas une marche automatique vers l'avant.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Je ne m'enterre pas dans un particularisme étroit. Mais je ne veux pas non plus me perdre dans un universalisme décharné.",a:"Aimé Césaire",s:"Lettre à Maurice Thorez, 1956"},
+{t:"Mon nom : offensé. Mon prénom : humilié. Mon état : révolté. Mon âge : l'âge de pierre.",a:"Aimé Césaire",s:"Et les chiens se taisaient, 1956"},
+{t:"Nous nous devons d'être debout.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+{t:"La poésie est cette démarche qui, par le mot, l'image, le mythe, l'amour et l'humour, m'installe au cœur vivant de moi-même et du monde.",a:"Aimé Césaire",s:"Poésie et connaissance, 1945"},
+{t:"Ma négritude n'est ni une tour ni une cathédrale. Elle plonge dans la chair rouge du sol.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+{t:"On ne bâtit rien sur le mépris.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+
+// ═══════ BELL HOOKS ═══════
+{t:"L'amour est un acte de courage, pas de peur.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"La pensée féministe nous apprend à soumettre la domination à une critique permanente.",a:"bell hooks",s:"Feminist Theory: From Margin to Center, 1984"},
+{t:"Pour guérir, il faut d'abord reconnaître la blessure.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"L'éducation est la pratique de la liberté.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+{t:"Le patriarcat n'a pas de genre.",a:"bell hooks",s:"Feminism Is for Everybody, 2000"},
+{t:"L'amour et la domination ne peuvent pas coexister.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"Le racisme et le sexisme sont des systèmes imbriqués de domination.",a:"bell hooks",s:"Ain't I a Woman, 1981"},
+{t:"La salle de classe reste le lieu de possibilité le plus radical.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+{t:"Vivre consciemment, c'est penser de manière critique à soi-même et au monde.",a:"bell hooks",s:"Teaching Critical Thinking, 2010"},
+{t:"Le féminisme est pour tout le monde.",a:"bell hooks",s:"Feminism Is for Everybody, 2000"},
+{t:"L'oppression est le principal ennemi de l'amour.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"La pensée critique exige que nous prenions la parole.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+{t:"Il faut quitter la place qu'on nous assigne et aller vers la marge, cet espace radical d'ouverture.",a:"bell hooks",s:"Yearning: Race, Gender, and Cultural Politics, 1990"},
+{t:"La culture de la domination enseigne à tous que la voie du pouvoir passe par la domination.",a:"bell hooks",s:"Teaching Community, 2003"},
+{t:"L'espoir est essentiel à toute lutte politique pour le changement.",a:"bell hooks",s:"Teaching Community, 2003"},
+{t:"Le vrai amour est fondé sur le respect mutuel et la bienveillance.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"Les marges ne sont pas seulement un lieu de privation. C'est aussi un lieu de résistance.",a:"bell hooks",s:"Yearning, 1990"},
+{t:"Quand nous choisissons l'amour, nous choisissons d'agir contre la domination.",a:"bell hooks",s:"All About Love, 2000"},
+{t:"L'éducation libératrice ne remplit pas les têtes, elle les ouvre.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+{t:"La théorie n'est pas intrinsèquement curative. Elle le devient quand nous lui demandons de l'être.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+];
+{t:"Toute grève est un acte de guerre contre le capital.",a:"Karl Marx",s:"Misère de la philosophie, 1847"},
+{t:"Le gouvernement moderne n'est qu'un comité qui gère les affaires communes de toute la bourgeoisie.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"La superstition militaire est la dernière forme de la domination.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"L'armée est le principal instrument de la force de l'État.",a:"Friedrich Engels",s:"L'Origine de la famille, 1884"},
+{t:"L'internationalisme n'est pas une abstraction : c'est un fait politique et un acte politique.",a:"Léon Trotski",s:"La Révolution permanente, 1930"},
+{t:"Tout gouvernement qui ne rend pas compte au peuple de ses actes est un gouvernement de tyrans.",a:"Jean-Luc Mélenchon",s:"Discours à l'Assemblée nationale, 2020"},
+{t:"L'égalité est le fondement de toute liberté réelle.",a:"Pierre-Joseph Proudhon",s:"De la justice, 1858"},
+{t:"C'est dans l'ombre que se prépare la lumière.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"La désobéissance est le premier devoir du citoyen face à l'injustice.",a:"Louise Michel",s:"Discours, 1883"},
+{t:"L'État centralisé est la négation de la liberté.",a:"Mikhaïl Bakounine",s:"Étatisme et Anarchie, 1873"},
+{t:"L'intellectuel traditionnel se croit autonome et indépendant du groupe social dominant.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Le changement commence par le refus collectif de l'injustice.",a:"Angela Davis",s:"Conférence, 2017"},
+{t:"L'Afrique commence à renaître. Elle n'a plus besoin de permission.",a:"Frantz Fanon",s:"Pour la révolution africaine, 1964"},
+{t:"Le développement est le nouveau nom de la paix.",a:"Salvador Allende",s:"Discours devant les Nations Unies, 1972"},
+{t:"Quand une société produit plus de malades que de bien portants, c'est qu'elle est elle-même malade.",a:"Ivan Illich",s:"Némésis médicale, 1975"},
+{t:"Il n'y a pas de lutte sans poésie.",a:"Aimé Césaire",s:"Tropiques, 1941"},
+// ═══════ MARX SUPPLÉMENTAIRES ═══════
+{t:"Le capitalisme porte en lui la guerre comme la nuée porte l'orage.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"Le besoin d'une société sans cesse élargie pour ses produits pousse la bourgeoisie sur tout le globe.",a:"Karl Marx",s:"Manifeste du Parti communiste, 1848"},
+{t:"L'argent est le proxénète entre le besoin et l'objet.",a:"Karl Marx",s:"Manuscrits de 1844"},
+{t:"La production capitaliste engendre elle-même sa propre négation avec la fatalité d'un processus naturel.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"Les droits de l'homme ne sont rien d'autre que les droits du membre de la société bourgeoise.",a:"Karl Marx",s:"La Question juive, 1843"},
+{t:"La force est l'accoucheuse de toute vieille société en travail.",a:"Karl Marx",s:"Le Capital, Livre I, 1867"},
+{t:"Toute la mythologie domine et façonne les forces de la nature dans et par l'imagination.",a:"Karl Marx",s:"Grundrisse, 1858"},
+{t:"Il faut rendre l'oppression réelle encore plus oppressante en y ajoutant la conscience de l'oppression.",a:"Karl Marx",s:"Critique de la philosophie du droit de Hegel, 1844"},
+{t:"Le philosophe produit des idées, le poète des vers, le pasteur des sermons, le criminaliste des crimes.",a:"Karl Marx",s:"Théories sur la plus-value, 1863"},
+{t:"Derniers mots de tout ordre social pétrifié : j'étais et je suis, j'ai le droit d'être.",a:"Karl Marx",s:"Critique de la philosophie du droit de Hegel, 1844"},
+// ═══════ ENGELS SUPPLÉMENTAIRES ═══════
+{t:"Aucune nation ne peut être libre si elle opprime d'autres nations.",a:"Friedrich Engels",s:"Discours sur la Pologne, 1847"},
+{t:"La morale a toujours été une morale de classe.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"L'État s'éteindra de lui-même le jour où il deviendra inutile.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"Le premier acte par lequel l'État se manifeste réellement comme représentant de toute la société est aussi son dernier acte propre.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"Le passage du règne de la nécessité au règne de la liberté, voilà la révolution sociale.",a:"Friedrich Engels",s:"Anti-Dühring, 1878"},
+{t:"Les conditions dans lesquelles les hommes produisent et échangent varient de pays à pays.",a:"Friedrich Engels",s:"Principes du communisme, 1847"},
+{t:"Toute l'histoire a été une histoire de luttes de classes entre classes exploiteuses et classes exploitées.",a:"Friedrich Engels",s:"Préface au Manifeste, 1883"},
+{t:"Le travail a créé l'homme lui-même.",a:"Friedrich Engels",s:"Le Rôle du travail dans la transformation du singe en homme, 1876"},
+// ═══════ TROTSKI SUPPLÉMENTAIRES ═══════
+{t:"L'inégalité est le moteur de la société bourgeoise mais le frein de la société socialiste.",a:"Léon Trotski",s:"La Révolution trahie, 1936"},
+{t:"Le marxisme est avant tout une méthode d'analyse.",a:"Léon Trotski",s:"Histoire de la révolution russe, 1930"},
+{t:"Un peuple armé qui se connaît lui-même est invincible.",a:"Léon Trotski",s:"Comment la révolution s'est armée, 1923"},
+{t:"La défense de la Révolution d'Octobre est la défense du prolétariat mondial.",a:"Léon Trotski",s:"La Révolution permanente, 1930"},
+{t:"Les peuples arriérés reprennent à leur compte les conquêtes matérielles et intellectuelles des pays avancés.",a:"Léon Trotski",s:"Histoire de la révolution russe, 1930"},
+{t:"On peut être ferme dans ses principes et souple dans ses méthodes.",a:"Léon Trotski",s:"Ma vie, 1930"},
+// ═══════ MÉLENCHON SUPPLÉMENTAIRES ═══════
+{t:"L'urgence écologique ne se négocie pas. Elle s'impose.",a:"Jean-Luc Mélenchon",s:"Meeting de Nantes, 2022"},
+{t:"La dette publique est le prétexte permanent à la liquidation des services publics.",a:"Jean-Luc Mélenchon",s:"Discours à l'Assemblée nationale, 2019"},
+{t:"Le partage des richesses est la condition de la paix sociale.",a:"Jean-Luc Mélenchon",s:"Meeting de Lyon, 2017"},
+{t:"L'école publique est le cœur battant de la République.",a:"Jean-Luc Mélenchon",s:"Meeting de Lille, 2022"},
+{t:"L'eau, l'air, la terre : rien de tout cela n'est une marchandise.",a:"Jean-Luc Mélenchon",s:"L'Avenir en commun, 2017"},
+{t:"Le vote est l'arme de ceux qui n'en ont pas d'autre.",a:"Jean-Luc Mélenchon",s:"Meeting de Marseille, 2022"},
+// ═══════ PROUDHON SUPPLÉMENTAIRES ═══════
+{t:"Sous le gouvernement représentatif, l'électeur nomme son député pour ne plus avoir à penser.",a:"Pierre-Joseph Proudhon",s:"Idée générale de la Révolution, 1851"},
+{t:"L'utopie d'aujourd'hui est la vérité de demain.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"Le communisme est l'exploitation du fort par le faible.",a:"Pierre-Joseph Proudhon",s:"Qu'est-ce que la propriété ?, 1840"},
+{t:"La liberté n'est pas la fille mais la mère de l'ordre.",a:"Pierre-Joseph Proudhon",s:"Confessions d'un révolutionnaire, 1849"},
+{t:"Le peuple ne fait de révolution que quand il n'y a plus moyen de faire autrement.",a:"Pierre-Joseph Proudhon",s:"Confessions d'un révolutionnaire, 1849"},
+{t:"Le contrat social est l'acte suprême par lequel chaque citoyen engage envers la société sa liberté.",a:"Pierre-Joseph Proudhon",s:"Du principe fédératif, 1863"},
+// ═══════ LOUISE MICHEL SUPPLÉMENTAIRES ═══════
+{t:"Les femmes de la Commune ont prouvé que le courage n'a pas de sexe.",a:"Louise Michel",s:"La Commune, 1898"},
+{t:"Le peuple ne veut plus de dieux, plus de maîtres.",a:"Louise Michel",s:"Discours, 1882"},
+{t:"Je porte en moi l'insurrection permanente.",a:"Louise Michel",s:"Mémoires, 1886"},
+{t:"Paris n'est pas une ville, c'est un monde.",a:"Louise Michel",s:"La Commune, 1898"},
+{t:"L'amour de l'humanité est la seule religion qui vaille.",a:"Louise Michel",s:"Mémoires, 1886"},
+// ═══════ BAKOUNINE SUPPLÉMENTAIRES ═══════
+{t:"L'égalité sans la liberté, c'est le despotisme de l'État.",a:"Mikhaïl Bakounine",s:"Étatisme et Anarchie, 1873"},
+{t:"Les législateurs et les fondateurs d'États sont les plus grands imposteurs de l'histoire.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Le privilège est l'ennemi mortel du droit.",a:"Mikhaïl Bakounine",s:"Fédéralisme, socialisme et antithéologisme, 1867"},
+{t:"L'instinct de révolte est un fait aussi naturel que l'instinct de conservation.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+{t:"Toute religion est un appauvrissement de l'humanité.",a:"Mikhaïl Bakounine",s:"Dieu et l'État, 1882"},
+// ═══════ GRAMSCI SUPPLÉMENTAIRES ═══════
+{t:"Le bon sens est la philosophie spontanée de tout le monde.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"La philosophie de la praxis est la philosophie de l'action.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"L'erreur de l'intellectuel consiste à croire qu'on puisse savoir sans comprendre.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Toute relation de pouvoir implique au moins la possibilité de la résistance.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+{t:"Le langage est aussi un pouvoir.",a:"Antonio Gramsci",s:"Cahiers de prison, 1929–1935"},
+// ═══════ DAVIS SUPPLÉMENTAIRES ═══════
+{t:"Il n'y a pas de voie rapide vers la liberté.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"La justice n'est pas un produit fini. C'est un processus.",a:"Angela Davis",s:"Conférence, 2015"},
+{t:"On ne peut pas construire un mouvement fondé sur la peur.",a:"Angela Davis",s:"La liberté est une lutte constante, 2016"},
+{t:"Le système carcéral reproduit les inégalités raciales qu'il prétend combattre.",a:"Angela Davis",s:"Les Goulags de la démocratie, 2003"},
+// ═══════ FANON SUPPLÉMENTAIRES ═══════
+{t:"Le colonisé est un persécuté qui rêve en permanence de devenir persécuteur.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Le langage du colon, quand il parle du colonisé, est un langage zoologique.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+{t:"Toute découverte scientifique qui n'est pas mise au service de l'homme est une dénaturation de la science.",a:"Frantz Fanon",s:"Les Damnés de la terre, 1961"},
+// ═══════ ALLENDE SUPPLÉMENTAIRE ═══════
+{t:"Le peuple ne doit pas oublier. L'histoire ne se répète pas, mais elle donne des leçons.",a:"Salvador Allende",s:"Discours au stade national, 1971"},
+// ═══════ ILLICH SUPPLÉMENTAIRES ═══════
+{t:"La plupart des gens malades dans le monde le sont parce qu'ils sont pauvres, non parce qu'ils manquent de médecins.",a:"Ivan Illich",s:"Némésis médicale, 1975"},
+{t:"L'école enseigne la soumission aux hiérarchies plus que le savoir.",a:"Ivan Illich",s:"Une société sans école, 1971"},
+{t:"Une société qui définit le bien comme satisfaction maximale du plus grand nombre est vouée à l'échec.",a:"Ivan Illich",s:"La Convivialité, 1973"},
+// ═══════ CÉSAIRE SUPPLÉMENTAIRES ═══════
+{t:"L'essentiel n'est pas de savoir mais de ne jamais se résigner.",a:"Aimé Césaire",s:"Discours sur le colonialisme, 1950"},
+{t:"Il y a place pour tous au rendez-vous de la conquête.",a:"Aimé Césaire",s:"Cahier d'un retour au pays natal, 1939"},
+// ═══════ HOOKS SUPPLÉMENTAIRES ═══════
+{t:"Le silence est le complice de l'injustice.",a:"bell hooks",s:"Talking Back, 1989"},
+{t:"La pensée critique est un acte d'amour.",a:"bell hooks",s:"Teaching Critical Thinking, 2010"},
+{t:"Le changement ne vient pas en restant confortable.",a:"bell hooks",s:"Teaching to Transgress, 1994"},
+
+let isRandom = false;
+
+function getDayOfYear() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+}
+
+function seededRandom(seed) {
+  let x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function display(q) {
+  const el = document.getElementById('quote');
+  el.classList.add('fade-out');
+  setTimeout(() => {
+    document.getElementById('quote').textContent = q.t;
+    document.getElementById('author').textContent = q.a;
+    document.getElementById('source').textContent = q.s;
+    el.classList.remove('fade-out');
+  }, 250);
+}
+
+function showDaily() {
+  const dayIndex = getDayOfYear() % Q.length;
+  display(Q[dayIndex]);
+  const today = new Date();
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const dateStr = today.toLocaleDateString('fr-FR', opts);
+  document.getElementById('day-counter').textContent = 'Édition du ' + dateStr + ' · Citation nº ' + (dayIndex + 1) + '/' + Q.length;
+  document.getElementById('mode-label').textContent = '— citation du jour —';
+}
+
+function generate() {
+  const idx = Math.floor(Math.random() * Q.length);
+  display(Q[idx]);
+  document.getElementById('mode-label').textContent = '— citation aléatoire —';
+  isRandom = true;
+}
+
+showDaily();
+</script>
+</body>
+</html>
